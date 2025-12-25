@@ -13,7 +13,10 @@ RUN set -eux; \
       armv7)  R_ARCH="armv7-unknown-linux-musleabihf" ;; \
       *) echo "Unsupported BUILD_ARCH: ${BUILD_ARCH}" && exit 1 ;; \
     esac; \
-    curl -L -o /tmp/rathole.tar.gz "https://github.com/rapiz1/rathole/releases/download/v0.5.0/rathole-${R_ARCH}.tar.gz"; \
+    URL="https://github.com/rapiz1/rathole/releases/download/v0.5.0/rathole-${R_ARCH}.tar.gz"; \
+    curl -fSL --retry 5 --retry-delay 2 --connect-timeout 10 --max-time 120 -o /tmp/rathole.tar.gz "$URL"; \
+    file /tmp/rathole.tar.gz; \
+    tar -tzf /tmp/rathole.tar.gz | head -n 20; \
     tar -xzf /tmp/rathole.tar.gz -C /usr/local/bin rathole; \
     chmod +x /usr/local/bin/rathole; \
     rm -f /tmp/rathole.tar.gz

@@ -8,7 +8,7 @@ and cloud connectivity.
 1. Open Home Assistant
 2. Go to **Settings → Add-ons → Add-on Store**
 3. Click the **three dots (⋮) → Repositories**
-4. Add this repository URL:https://github.com/ytfang/vanztec-ha-addons
+4. Add this repository URL:https://github.com/ytfangh/vanztec-ha-addons
 5. Reload the Add-on Store
 6. Install the desired add-on
 

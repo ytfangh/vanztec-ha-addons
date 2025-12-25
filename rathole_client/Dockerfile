@@ -1,7 +1,7 @@
 ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
 FROM ${BUILD_FROM}
 
-ARG BUILD_ARCH
+ARG BUILD_ARCH=amd64
 
 RUN apk add --no-cache bash curl ca-certificates
 

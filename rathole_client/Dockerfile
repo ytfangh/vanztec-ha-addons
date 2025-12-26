@@ -1,25 +1,25 @@
 ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
 FROM ${BUILD_FROM}
 
-ARG BUILD_ARCH=amd64
+ARG BUILD_ARCH
+ARG RATHOLE_TAG=rathole-v0.5.0
+ARG RATHOLE_OWNER=ytfangh
+ARG RATHOLE_REPO=rathole-binaries
 
-RUN apk add --no-cache bash curl ca-certificates
-
-# Download rathole v0.5.0 binary for the correct architecture
 RUN set -eux; \
+    apk add --no-cache curl ca-certificates; \
     case "${BUILD_ARCH}" in \
-      amd64)  R_ARCH="x86_64-unknown-linux-musl" ;; \
-      aarch64) R_ARCH="aarch64-unknown-linux-musl" ;; \
-      armv7)  R_ARCH="armv7-unknown-linux-musleabihf" ;; \
+      amd64)  BIN="rathole-amd64" ;; \
+      aarch64) BIN="rathole-aarch64" ;; \
+      armv7)  BIN="rathole-armv7" ;; \
       *) echo "Unsupported BUILD_ARCH: ${BUILD_ARCH}" && exit 1 ;; \
     esac; \
-    URL="https://github.com/rapiz1/rathole/releases/download/v0.5.0/rathole-${R_ARCH}.tar.gz"; \
-    curl -fSL --retry 5 --retry-delay 2 --connect-timeout 10 --max-time 120 -o /tmp/rathole.tar.gz "$URL"; \
-    file /tmp/rathole.tar.gz; \
-    tar -tzf /tmp/rathole.tar.gz | head -n 20; \
-    tar -xzf /tmp/rathole.tar.gz -C /usr/local/bin rathole; \
+    URL="https://github.com/${RATHOLE_OWNER}/${RATHOLE_REPO}/releases/download/${RATHOLE_TAG}/${BIN}"; \
+    echo "Downloading rathole from $URL"; \
+    curl -fSL --retry 10 --retry-delay 2 --connect-timeout 10 --max-time 180 \
+      -o /usr/local/bin/rathole "$URL"; \
     chmod +x /usr/local/bin/rathole; \
-    rm -f /tmp/rathole.tar.gz
+    /usr/local/bin/rathole --version || true
 
 COPY run.sh /run.sh
 RUN chmod +x /run.sh

@@ -15,13 +15,12 @@ RUN set -eux; \
       *) echo "Unsupported BUILD_ARCH: ${BUILD_ARCH}" && exit 1 ;; \
     esac; \
     URL="https://github.com/${RATHOLE_OWNER}/${RATHOLE_REPO}/releases/download/${RATHOLE_TAG}/${BIN}"; \
-    echo "Downloading rathole from $URL"; \
     curl -fSL --retry 10 --retry-delay 2 --connect-timeout 10 --max-time 180 \
       -o /usr/local/bin/rathole "$URL"; \
     chmod +x /usr/local/bin/rathole; \
     /usr/local/bin/rathole --version || true
 
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
+# 让 s6 发现服务脚本
+COPY rootfs/ /
 
-CMD ["/run.sh"]
+RUN chmod +x /etc/services.d/rathole/run

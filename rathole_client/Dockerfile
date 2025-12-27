@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
+ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
 ARG BUILD_ARCH
@@ -20,7 +20,5 @@ RUN set -eux; \
     chmod +x /usr/local/bin/rathole; \
     /usr/local/bin/rathole --version || true
 
-# 让 s6 发现服务脚本
 COPY rootfs/ /
-
 RUN chmod +x /etc/services.d/rathole/run

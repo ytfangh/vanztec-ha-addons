@@ -21,4 +21,5 @@ RUN set -eux; \
     /usr/local/bin/rathole --version || true
 
 COPY rootfs/ /
-RUN chmod +x /etc/services.d/rathole/run
+RUN chmod +x /usr/bin/start.sh
+CMD ["/usr/bin/start.sh"]

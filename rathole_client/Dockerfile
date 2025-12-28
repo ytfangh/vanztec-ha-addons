@@ -22,4 +22,4 @@ RUN set -eux; \
 
 COPY rootfs/ /
 RUN chmod +x /usr/bin/start.sh
-CMD ["/usr/bin/start.sh"]
+ENTRYPOINT ["/usr/bin/start.sh"]

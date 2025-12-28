@@ -4,9 +4,13 @@
   "slug": "rathole_client",
   "description": "Secure tunnel client to connect Home Assistant to Vanztec cloud.",
   "arch": ["amd64", "aarch64", "armv7"],
+
+  "init": true,
+
   "startup": "services",
   "boot": "auto",
   "host_network": false,
+
   "options": {
     "vps_host": "43.153.44.119",
     "vps_port": 7000,

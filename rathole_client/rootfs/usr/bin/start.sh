@@ -19,7 +19,15 @@ local_addr = "${HA_LOCAL}"
 EOF
 
 bashio::log.info "Starting rathole client_id=${CLIENT_ID}"
-bashio::log.info "Launching: rathole client /tmp/client.toml"
+bashio::log.info "client.toml: $(cat /tmp/client.toml | tr '\n' ' ')"
+
+# 这些探测不要影响启动
 bashio::log.info "rathole version: $(/usr/local/bin/rathole --version 2>&1 || true)"
-bashio::log.info "rathole help: $(/usr/local/bin/rathole --help 2>&1 | head -n 5)"
-exec /usr/local/bin/rathole client /tmp/client.toml
+bashio::log.info "rathole help: $(/usr/local/bin/rathole -h 2>&1 | head -n 5 | tr '\n' ' ' || true)"
+
+# 打开 debug 输出
+export RUST_LOG=debug
+export RUST_BACKTRACE=1
+
+bashio::log.info "Launching rathole with debug logging..."
+exec /usr/local/bin/rathole /tmp/client.toml

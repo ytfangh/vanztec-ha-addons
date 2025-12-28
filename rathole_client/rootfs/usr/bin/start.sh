@@ -19,4 +19,7 @@ local_addr = "${HA_LOCAL}"
 EOF
 
 bashio::log.info "Starting rathole client_id=${CLIENT_ID}"
-exec /usr/local/bin/rathole /tmp/client.toml
+bashio::log.info "Launching: rathole client /tmp/client.toml"
+bashio::log.info "rathole version: $(/usr/local/bin/rathole --version 2>&1 || true)"
+bashio::log.info "rathole help: $(/usr/local/bin/rathole --help 2>&1 | head -n 5)"
+exec /usr/local/bin/rathole client /tmp/client.toml

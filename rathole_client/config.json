@@ -1,6 +1,6 @@
 {
   "name": "Vanztec Rathole Client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "slug": "rathole_client",
   "description": "Secure tunnel client to connect Home Assistant to Vanztec cloud.",
   "arch": ["amd64", "aarch64", "armv7"],

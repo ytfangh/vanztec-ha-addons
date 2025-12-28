@@ -5,8 +5,6 @@
   "description": "Secure tunnel client to connect Home Assistant to Vanztec cloud.",
   "arch": ["amd64", "aarch64", "armv7"],
 
-  "init": true,
-
   "startup": "application",
   "boot": "auto",
   "host_network": false,

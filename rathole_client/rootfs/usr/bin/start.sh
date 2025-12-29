@@ -30,7 +30,6 @@ export RUST_BACKTRACE=1
 
 bashio::log.info "rathole file info:"
 ls -l /usr/local/bin/rathole || true
-file /usr/local/bin/rathole || true
 
 # 把 stderr 合并到 stdout，并且用 exec 保持为主进程
 exec /usr/local/bin/rathole /tmp/client.toml 2>&1

@@ -2,33 +2,38 @@ ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
 ARG BUILD_ARCH
-ARG RATHOLE_TAG=rathole-v0.5.0
-ARG RATHOLE_OWNER=ytfangh
-ARG RATHOLE_REPO=rathole-binaries
+ARG RATHOLE_TAG
+ARG RATHOLE_OWNER
+ARG RATHOLE_REPO
 
 RUN set -eux; \
-    echo "=== Build info ==="; \
     echo "BUILD_FROM=${BUILD_FROM}"; \
     echo "BUILD_ARCH=${BUILD_ARCH}"; \
-    if command -v ldd >/dev/null 2>&1; then \
-      echo -n "ldd: "; ldd --version 2>&1 | head -n 1 || true; \
-      if ldd --version 2>&1 | grep -qi musl; then echo "LIBC=musl"; else echo "LIBC=glibc"; fi; \
+    \
+    # ---- install deps (apk or apt) ---- \
+    if command -v apk >/dev/null 2>&1; then \
+      apk add --no-cache curl ca-certificates unzip; \
+    elif command -v apt-get >/dev/null 2>&1; then \
+      apt-get update; \
+      apt-get install -y --no-install-recommends curl ca-certificates unzip; \
+      rm -rf /var/lib/apt/lists/*; \
     else \
-      echo "ldd: not found"; \
+      echo "ERROR: no supported package manager (apk/apt-get)"; \
+      exit 1; \
     fi; \
-    echo "uname -m: $(uname -m)"; \
-    echo "=================="; \
-    apk add --no-cache curl ca-certificates; \
+    \
+    # ---- map HA BUILD_ARCH to official asset name ---- \
     case "${BUILD_ARCH}" in \
-      amd64)   BIN="rathole-amd64" ;; \
-      aarch64) BIN="rathole-aarch64" ;; \
-      armv7)   BIN="rathole-armv7" ;; \
+      amd64)   ASSET="rathole-x86_64-unknown-linux-gnu.zip" ;; \
+      aarch64) ASSET="rathole-aarch64-unknown-linux-musl.zip" ;; \
       *) echo "Unsupported BUILD_ARCH: ${BUILD_ARCH}" && exit 1 ;; \
     esac; \
-    URL="https://github.com/${RATHOLE_OWNER}/${RATHOLE_REPO}/releases/download/${RATHOLE_TAG}/${BIN}"; \
+    \
+    URL="https://github.com/${RATHOLE_OWNER}/${RATHOLE_REPO}/releases/download/${RATHOLE_TAG}/${ASSET}"; \
     echo "Downloading: ${URL}"; \
-    curl -fSL --retry 10 --retry-delay 2 --connect-timeout 10 --max-time 180 \
-      -o /usr/local/bin/rathole "$URL"; \
+    curl -fSL --retry 10 --retry-delay 2 --connect-timeout 10 --max-time 180 -o /tmp/rathole.zip "${URL}"; \
+    unzip -o /tmp/rathole.zip -d /usr/local/bin/; \
+    rm -f /tmp/rathole.zip; \
     chmod +x /usr/local/bin/rathole; \
     /usr/local/bin/rathole --version || true
 

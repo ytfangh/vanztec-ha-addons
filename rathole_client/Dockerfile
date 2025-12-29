@@ -7,8 +7,8 @@ ARG RATHOLE_OWNER
 ARG RATHOLE_REPO
 
 RUN set -eux; \
-    echo "BUILD_FROM=${BUILD_FROM}"; \
-    echo "BUILD_ARCH=${BUILD_ARCH}"; \
+    echo "BUILD_FROM=${BUILD_FROM:-<unset>}"; \
+    echo "BUILD_ARCH=${BUILD_ARCH:-<unset>}"; \
     \
     # ---- install deps (apk or apt) ---- \
     if command -v apk >/dev/null 2>&1; then \
@@ -32,9 +32,23 @@ RUN set -eux; \
     URL="https://github.com/${RATHOLE_OWNER}/${RATHOLE_REPO}/releases/download/${RATHOLE_TAG}/${ASSET}"; \
     echo "Downloading: ${URL}"; \
     curl -fSL --retry 10 --retry-delay 2 --connect-timeout 10 --max-time 180 -o /tmp/rathole.zip "${URL}"; \
-    unzip -o /tmp/rathole.zip -d /usr/local/bin/; \
+    \
+    # ---- extract safely, then install the 'rathole' binary ---- \
+    mkdir -p /tmp/rathole_ex; \
+    unzip -o /tmp/rathole.zip -d /tmp/rathole_ex; \
     rm -f /tmp/rathole.zip; \
-    chmod +x /usr/local/bin/rathole; \
+    \
+    # find the binary named 'rathole' in the extracted contents
+    RATHOLE_BIN="$(find /tmp/rathole_ex -type f -name rathole -maxdepth 3 | head -n 1)"; \
+    if [ -z "${RATHOLE_BIN}" ]; then \
+      echo "ERROR: cannot find 'rathole' binary in release asset ${ASSET}"; \
+      echo "Extracted files:"; \
+      find /tmp/rathole_ex -maxdepth 3 -type f -print; \
+      exit 1; \
+    fi; \
+    install -m 0755 "${RATHOLE_BIN}" /usr/local/bin/rathole; \
+    rm -rf /tmp/rathole_ex; \
+    \
     /usr/local/bin/rathole --version || true
 
 COPY rootfs/ /

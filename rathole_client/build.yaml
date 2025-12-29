@@ -1,4 +1,4 @@
 args:
-  RATHOLE_TAG: "rathole-v0.5.0"
+  RATHOLE_TAG: "v0.5.0"
   RATHOLE_OWNER: "rapiz1"
   RATHOLE_REPO: "rathole"

@@ -81,4 +81,3 @@ ldd /usr/local/bin/rathole 2>&1 || true
 # --------------------------------------------------
 bashio::log.info "now exec rathole..."
 exec /usr/local/bin/rathole /tmp/client.toml 2>&1
-

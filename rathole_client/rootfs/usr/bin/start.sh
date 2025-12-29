@@ -21,13 +21,16 @@ EOF
 bashio::log.info "Starting rathole client_id=${CLIENT_ID}"
 bashio::log.info "client.toml: $(cat /tmp/client.toml | tr '\n' ' ')"
 
-# 这些探测不要影响启动
 bashio::log.info "rathole version: $(/usr/local/bin/rathole --version 2>&1 || true)"
 bashio::log.info "rathole help: $(/usr/local/bin/rathole -h 2>&1 | head -n 5 | tr '\n' ' ' || true)"
 
-# 打开 debug 输出
+bashio::log.info "Launching rathole with debug logging..."
 export RUST_LOG=debug
 export RUST_BACKTRACE=1
 
-bashio::log.info "Launching rathole with debug logging..."
-exec /usr/local/bin/rathole /tmp/client.toml
+bashio::log.info "rathole file info:"
+ls -l /usr/local/bin/rathole || true
+file /usr/local/bin/rathole || true
+
+# 把 stderr 合并到 stdout，并且用 exec 保持为主进程
+exec /usr/local/bin/rathole /tmp/client.toml 2>&1

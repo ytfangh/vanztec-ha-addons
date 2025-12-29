@@ -26,20 +26,11 @@ bashio::log.info "client.toml: $(cat /tmp/client.toml | tr '\n' ' ')"
 # --------------------------------------------------
 ARCH_RAW="$(uname -m)"
 case "$ARCH_RAW" in
-  x86_64)
-    ARCH="x86_64"
-    ;;
-  aarch64)
-    ARCH="aarch64"
-    ;;
-  armv7l)
-    ARCH="armv7"
-    ;;
-  armv6l)
-    ARCH="arm"
-    ;;
+  x86_64)  ARCH="x86_64" ;;
+  aarch64) ARCH="aarch64" ;;
   *)
-    ARCH="unknown (${ARCH_RAW})"
+    bashio::log.error "Unsupported CPU architecture: ${ARCH_RAW}. This add-on supports amd64(x86_64) and aarch64(arm64) only."
+    exit 1
     ;;
 esac
 

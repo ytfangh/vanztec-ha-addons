@@ -8,6 +8,7 @@ ARG RATHOLE_REPO=rathole-binaries
 
 RUN set -eux; \
     echo "=== Build info ==="; \
+    echo "BUILD_FROM=${BUILD_FROM}"; \
     echo "BUILD_ARCH=${BUILD_ARCH}"; \
     if command -v ldd >/dev/null 2>&1; then \
       echo -n "ldd: "; ldd --version 2>&1 | head -n 1 || true; \

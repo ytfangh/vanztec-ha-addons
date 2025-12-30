@@ -6,6 +6,9 @@ ARG RATHOLE_TAG
 ARG RATHOLE_OWNER
 ARG RATHOLE_REPO
 
+ARG VT_TEST_ARG
+RUN echo "VT_TEST_ARG=${VT_TEST_ARG:-<unset>}"
+
 RUN set -eux; \
     echo "BUILD_FROM=${BUILD_FROM:-<unset>}"; \
     echo "BUILD_ARCH=${BUILD_ARCH:-<unset>}"; \

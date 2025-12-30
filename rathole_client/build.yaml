@@ -3,7 +3,8 @@ build_from:
   aarch64: ghcr.io/home-assistant/aarch64-base:3.19
 
 args:
-  # 直接指向新仓库
-  RATHOLE_OWNER: "rathole-org"    # 改为新组织
-  RATHOLE_REPO: "rathole"         # 仓库名不变
-  RATHOLE_TAG: "v0.5.0"           # 标签格式正确
+  # 使用新仓库
+  RATHOLE_OWNER: "rathole-org"
+  RATHOLE_REPO: "rathole"
+  RATHOLE_TAG: "v0.5.0"
+  VT_TEST_ARG: "hello_from_build_yaml"

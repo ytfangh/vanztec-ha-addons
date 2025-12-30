@@ -6,3 +6,4 @@ args:
   RATHOLE_TAG: "rathole-v0.5.0"
   RATHOLE_OWNER: "rapiz1"
   RATHOLE_REPO: "rathole"
+  VT_TEST_ARG: "hello_from_build_yaml"

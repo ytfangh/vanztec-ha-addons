@@ -32,9 +32,19 @@ RUN set -eux; \
       *) echo "Unsupported BUILD_ARCH: ${BUILD_ARCH}" && exit 1 ;; \
     esac; \
     \
+    # 原始 URL（基于参数）
     URL="https://github.com/${RATHOLE_OWNER}/${RATHOLE_REPO}/releases/download/${RATHOLE_TAG}/${ASSET}"; \
-    echo "Downloading: ${URL}"; \
-    curl -fSL --retry 10 --retry-delay 2 --connect-timeout 10 --max-time 180 -o /tmp/rathole.zip "${URL}"; \
+    echo "Attempting download from: ${URL}"; \
+    
+    # 添加调试信息：先尝试 HEAD 请求检查可用性
+    echo "Checking URL availability..."; \
+    if curl -f -I "${URL}" 2>/dev/null | grep -q "301\|302\|Location"; then \
+        echo "INFO: URL redirects, curl will follow with -L flag"; \
+    fi; \
+    
+    # 下载并自动跟随重定向
+    curl -fL --retry 10 --retry-delay 2 --connect-timeout 10 --max-time 180 -o /tmp/rathole.zip "${URL}" || \
+        { echo "ERROR: Failed to download from ${URL}"; exit 1; }; \
     \
     # ---- extract safely, then install the 'rathole' binary ---- \
     mkdir -p /tmp/rathole_ex; \

@@ -13,11 +13,6 @@ boot: auto
 host_network: false
 ingress: false
 
-# ✅ 关键：放在 manifest 里，Supervisor 才会注入 BUILD_FROM
-build_from:
-  amd64: ghcr.io/home-assistant/amd64-base-debian:latest
-  aarch64: ghcr.io/home-assistant/aarch64-base:3.19
-
 options:
   vps_host: "43.153.44.119"
   vps_port: 7000
@@ -27,7 +22,7 @@ options:
 
 schema:
   vps_host: str
-  vps_port: port
+  vps_port: int
   client_id: str
   token: password
   ha_local: str
